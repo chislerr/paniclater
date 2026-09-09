@@ -1,0 +1,25 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512">
+  <defs>
+    <linearGradient id="bg2" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#0A84FF"/>
+      <stop offset="1" stop-color="#0040DD"/>
+    </linearGradient>
+    <filter id="soft2" x="-30%" y="-30%" width="160%" height="160%">
+      <feDropShadow dx="0" dy="6" stdDeviation="10" flood-color="#06143c" flood-opacity="0.35"/>
+    </filter>
+  </defs>
+
+  <rect width="512" height="512" rx="116" fill="url(#bg2)"/>
+
+  <g filter="url(#soft2)">
+    <!-- shield silhouette -->
+    <path fill="#ffffff" d="M 256 78 L 396 132 L 396 254 C 396 356 340 424 256 456 C 172 424 116 356 116 254 L 116 132 Z"/>
+    <!-- clock face carved in brand blue -->
+    <circle cx="256" cy="262" r="88" fill="url(#bg2)"/>
+    <circle cx="256" cy="262" r="88" fill="none" stroke="#0A84FF" stroke-width="0"/>
+    <!-- clock hands -->
+    <line x1="256" y1="262" x2="256" y2="196" stroke="#ffffff" stroke-width="20" stroke-linecap="round"/>
+    <line x1="256" y1="262" x2="312" y2="286" stroke="#ffffff" stroke-width="20" stroke-linecap="round"/>
+    <circle cx="256" cy="262" r="14" fill="#ffffff"/>
+  </g>
+</svg>
