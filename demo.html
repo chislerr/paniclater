@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="icon" type="image/png" href="favicon.png">
+<title>Panic Later — GBP Suspension Shield walkthrough</title>
+<style>
+  :root { color-scheme: light; }
+  * { box-sizing:border-box; }
+  body { margin:0; font-family:-apple-system,BlinkMacSystemFont,"SF Pro Text","Segoe UI",Roboto,system-ui,sans-serif; background:#0b1220; color:#e8edf7; -webkit-font-smoothing:antialiased; display:flex; flex-direction:column; align-items:center; min-height:100vh; }
+  .top { padding:22px 0 4px; text-align:center; }
+  .top .brand { display:flex; align-items:center; gap:10px; justify-content:center; }
+  .top img { width:34px; height:34px; border-radius:9px; }
+  .top b { font-size:16px; letter-spacing:-.01em; }
+  .top .d { font-size:11.5px; color:#8fa0bc; margin-top:2px; }
+
+  .stage { position:relative; width:min(880px, 94vw); height:520px; margin:18px 0 8px; border-radius:22px; overflow:hidden; background:#121c2e; box-shadow:0 30px 80px rgba(0,0,0,.5); }
+  .scene { position:absolute; inset:0; display:flex; align-items:center; justify-content:center; gap:36px; padding:36px; opacity:0; visibility:hidden; transition:opacity .5s ease; }
+  .scene.on { opacity:1; visibility:visible; }
+
+  .cap { position:absolute; top:18px; left:22px; font-size:12px; font-weight:700; letter-spacing:.1em; text-transform:uppercase; color:#60a5fa; background:rgba(96,165,250,.1); border:1px solid rgba(96,165,250,.3); padding:5px 13px; border-radius:999px; }
+
+  /* scene 1 — maps */
+  .maps { width:400px; background:#fff; border-radius:16px; overflow:hidden; color:#1d1d1f; box-shadow:0 16px 40px rgba(0,0,0,.4); }
+  .maps .ph { height:110px; background:linear-gradient(120deg,#c8d8f0,#e8eef7 55%,#f7e9d8); position:relative; }
+  .maps .ph .cat { position:absolute; bottom:10px; left:14px; font-size:10px; background:#fff; border-radius:999px; padding:3px 10px; font-weight:600; }
+  .maps .in { padding:14px 16px 18px; }
+  .maps .in h3 { margin:0 0 3px; font-size:16.5px; }
+  .maps .in .st { color:#5f6368; font-size:11.5px; }
+  .maps .in .st b { color:#e37400; }
+  .susp { margin-top:12px; background:#fce8e6; border:1px solid #f5c6c0; color:#c5221f; border-radius:10px; padding:10px 13px; font-size:12.5px; font-weight:700; }
+  .radar { width:360px; background:#182338; border:1px solid #263349; border-radius:16px; padding:16px 18px; box-shadow:0 16px 40px rgba(0,0,0,.45); }
+  .radar .rh { display:flex; align-items:center; gap:10px; margin-bottom:10px; }
+  .radar .rh .ic { width:30px; height:30px; border-radius:9px; background:linear-gradient(135deg,#0a84ff,#0055d4); display:flex; align-items:center; justify-content:center; }
+  .radar .rh b { font-size:14px; }
+  .radar .line { display:flex; gap:10px; align-items:flex-start; background:rgba(248,113,113,.08); border:1px solid rgba(248,113,113,.4); border-radius:12px; padding:11px 13px; }
+  .radar .dot { width:10px; height:10px; min-width:10px; border-radius:50%; background:#ff3b30; box-shadow:0 0 12px rgba(255,59,48,.8); margin-top:3px; }
+  .radar .line b { font-size:13px; display:block; }
+  .radar .line small { color:#8fa0bc; font-size:11.5px; }
+  .radar .go { margin-top:12px; width:100%; background:#0071e3; color:#fff; border:none; border-radius:999px; padding:9px; font-weight:600; font-size:12.5px; font-family:inherit; }
+
+  /* scene 2 — audit form */
+  .pop { width:400px; background:#fff; color:#1d1d1f; border-radius:18px; padding:15px; box-shadow:0 16px 40px rgba(0,0,0,.4); }
+  .pop .mh { display:flex; align-items:center; gap:9px; border-bottom:1px solid #eef0f3; padding-bottom:9px; margin-bottom:11px; }
+  .pop .mh .ic { width:25px; height:25px; border-radius:8px; background:linear-gradient(135deg,#0a84ff,#0055d4); display:flex; align-items:center; justify-content:center; }
+  .pop .mh b { font-size:13px; }
+  .pop label { display:block; font-size:10px; color:#6e6e73; margin:8px 0 3px; }
+  .pop .sel { border:1px solid #d2d2d7; border-radius:8px; padding:6px 9px; font-size:11.5px; background:#fbfbfd; transition:all .4s ease; color:#b9bec7; }
+  .pop .sel.filled { color:#1d1d1f; border-color:#0071e3; background:#f0f6ff; }
+  .pop .go { margin-top:13px; background:#0071e3; color:#fff; border:none; border-radius:999px; width:100%; padding:9px; font-weight:600; font-size:12px; font-family:inherit; }
+  .pop .go.pulse { animation:pulse 1s ease infinite; }
+  @keyframes pulse { 0%,100%{ box-shadow:0 0 0 0 rgba(0,113,227,.45);} 50%{ box-shadow:0 0 0 12px rgba(0,113,227,0);} }
+  .stepside { max-width:280px; }
+  .stepside h3 { font-size:21px; margin:0 0 10px; letter-spacing:-.01em; }
+  .stepside p { font-size:13.5px; color:#8fa0bc; line-height:1.65; margin:0; }
+
+  /* scene 3 — score */
+  .sc { display:flex; align-items:center; gap:16px; }
+  .ringbox { position:relative; width:96px; height:96px; min-width:96px; }
+  .ringbox svg { transform:rotate(-90deg); }
+  .ringbox .num { position:absolute; inset:0; display:flex; flex-direction:column; align-items:center; justify-content:center; }
+  .ringbox .num b { font-size:26px; }
+  .ringbox .num span { font-size:9px; color:#8fa0bc; }
+  .band { display:inline-block; font-size:11px; font-weight:700; color:#d70015; background:#ffe5e3; border-radius:999px; padding:3px 12px; margin-bottom:6px; }
+  .meta { font-size:11.5px; color:#8fa0bc; }
+  .factors { margin-top:16px; }
+  .fc { background:#182338; border:1px solid #263349; border-radius:12px; padding:10px 13px; margin-top:9px; opacity:0; transform:translateY(12px); transition:all .5s ease; }
+  .fc.on { opacity:1; transform:none; }
+  .fc b { font-size:12.5px; }
+  .fc .ch { float:right; font-size:8.5px; font-weight:700; padding:2px 8px; border-radius:999px; margin-left:5px; }
+  .ch.c { color:#ff8f88; background:rgba(248,113,113,.14); } .ch.w { color:#8fa0bc; background:#223047; }
+  .fc p { margin:3px 0 0; font-size:10.5px; color:#8fa0bc; line-height:1.45; }
+
+  /* scene 4 — letter */
+  .letter { width:430px; background:#fff; color:#1d1d1f; border-radius:16px; padding:18px 20px; box-shadow:0 16px 40px rgba(0,0,0,.4); }
+  .letter h4 { margin:0 0 9px; font-size:13px; }
+  .letter pre { margin:0; font-family:ui-monospace,'Cascadia Mono',Consolas,monospace; font-size:10.8px; line-height:1.6; white-space:pre-wrap; min-height:250px; color:#3a3a3c; }
+  .letter .cur { display:inline-block; width:7px; height:12px; background:#0071e3; animation:blink .8s steps(1) infinite; vertical-align:-2px; }
+  @keyframes blink { 50% { opacity:0; } }
+  .letter .btns { display:flex; gap:8px; margin-top:11px; }
+  .letter .btns span { font-size:10.5px; font-weight:600; background:#ebebf0; color:#1d1d1f; border-radius:999px; padding:5px 13px; }
+  .letter .btns span.ok { background:#34c759; color:#fff; }
+
+  /* scene 5 — pdf */
+  .pdf { width:400px; background:#fff; color:#1d1d1f; border-radius:12px; overflow:hidden; box-shadow:0 16px 40px rgba(0,0,0,.4); }
+  .pdf .ph { background:linear-gradient(120deg,#0a84ff,#0055d4); color:#fff; padding:14px 18px; }
+  .pdf .ph b { font-size:13.5px; display:block; }
+  .pdf .ph small { font-size:10px; opacity:.9; }
+  .pdf .bd { padding:14px 18px 18px; }
+  .pdf .mrow { display:flex; gap:8px; margin-bottom:12px; }
+  .pdf .m { flex:1; background:#f5f5f7; border-radius:9px; text-align:center; padding:8px 4px; }
+  .pdf .m b { font-size:15px; display:block; }
+  .pdf .m span { font-size:7.5px; color:#86868b; text-transform:uppercase; letter-spacing:.05em; font-weight:700; }
+  .pdf .srow { display:flex; align-items:center; gap:8px; font-size:10.5px; margin:7px 0; }
+  .pdf .srow .lb { min-width:52px; font-weight:600; }
+  .pdf .srow .bar { flex:1; height:8px; background:#ececf1; border-radius:5px; overflow:hidden; }
+  .pdf .srow .bar i { display:block; height:100%; border-radius:5px; }
+  .pdf .print { margin-top:13px; text-align:center; background:#0071e3; color:#fff; border-radius:999px; padding:8px; font-size:11.5px; font-weight:600; }
+
+  .dots { display:flex; gap:8px; margin:6px 0 4px; }
+  .dots i { width:8px; height:8px; border-radius:50%; background:#263349; transition:background .3s; }
+  .dots i.on { background:#60a5fa; }
+  .disc { font-size:11px; color:#64748b; max-width:640px; text-align:center; line-height:1.6; padding:0 20px 30px; }
+  .disc a { color:#60a5fa; text-decoration:none; }
+</style>
+</head>
+<body>
+
+<div class="top">
+  <div class="brand">
+    <img src="logo-v2.svg" alt="">
+    <b>Panic Later · GBP Suspension Shield</b>
+  </div>
+  <div class="d">Product walkthrough — what happens from a suspended profile to a filed appeal</div>
+</div>
+
+<div class="stage">
+
+  <!-- SCENE 1: radar -->
+  <div class="scene on" data-s="0">
+    <span class="cap">1 · Maps Radar</span>
+    <div class="maps">
+      <div class="ph"><span class="cat">Dentist · Vilnius</span></div>
+      <div class="in">
+        <h3>Bella Vista Dentista</h3>
+        <div class="st"><b>4.6</b> ★★★★★ · 112 reviews · Dentist</div>
+        <div class="susp">⚠ Suspended — policy violation (quality)</div>
+      </div>
+    </div>
+    <div class="radar">
+      <div class="rh">
+        <div class="ic"><svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M12 2L20 5.5V11c0 5.2-3.4 9.4-8 11-4.6-1.6-8-5.8-8-11V5.5L12 2z" fill="#fff"/><path d="M8.5 12l2.4 2.4L15.5 9.5" stroke="#0a84ff" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" fill="none"/></svg></div>
+        <b>Suspension Shield</b>
+      </div>
+      <div class="line">
+        <span class="dot"></span>
+        <div><b>🔴 Possible suspension — Bella Vista Dentista</b><small>Detected on the Google Maps page you have open</small></div>
+      </div>
+      <button class="go">Open Appeal Kit →</button>
+    </div>
+  </div>
+
+  <!-- SCENE 2: audit -->
+  <div class="scene" data-s="1">
+    <span class="cap">2 · Risk audit</span>
+    <div class="pop">
+      <div class="mh">
+        <div class="ic"><svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M12 2L20 5.5V11c0 5.2-3.4 9.4-8 11-4.6-1.6-8-5.8-8-11V5.5L12 2z" fill="#fff"/><path d="M8.5 12l2.4 2.4L15.5 9.5" stroke="#0a84ff" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" fill="none"/></svg></div>
+        <b>Risk Audit</b>
+      </div>
+      <label>Business name keyword-stuffed?</label>
+      <div class="sel" data-fill="Yes / partly stuffed">—</div>
+      <label>Name · Address · Phone identical everywhere?</label>
+      <div class="sel" data-fill="No — there are differences">—</div>
+      <label>Photos on the profile</label>
+      <div class="sel" data-fill="A few, somewhat old">—</div>
+      <label>Appeals pending now?</label>
+      <div class="sel" data-fill="Yes">—</div>
+      <button class="go" id="runBtn">Run risk audit</button>
+    </div>
+    <div class="stepside">
+      <h3>Ten questions.<br>One honest number.</h3>
+      <p>Answer from what you see on the profile — or copy answers from a client call. The engine weighs nine factors, the same ones reinstatement consultants check by hand.</p>
+    </div>
+  </div>
+
+  <!-- SCENE 3: score -->
+  <div class="scene" data-s="2">
+    <span class="cap">3 · Score &amp; fixes</span>
+    <div class="pop" style="width:430px">
+      <div class="sc">
+        <div class="ringbox">
+          <svg width="96" height="96" viewBox="0 0 96 96">
+            <circle cx="48" cy="48" r="38" fill="none" stroke="#223047" stroke-width="9"/>
+            <circle id="ring" cx="48" cy="48" r="38" fill="none" stroke="#ff3b30" stroke-width="9" stroke-linecap="round" stroke-dasharray="238.76" stroke-dashoffset="238.76" style="transition:stroke-dashoffset 1.6s cubic-bezier(.2,.7,.2,1)"/>
+          </svg>
+          <div class="num"><b id="scoreN">0</b><span>/ 125</span></div>
+        </div>
+        <div>
+          <span class="band">HIGH RISK — act this week</span>
+          <div class="meta" id="fcount">0 factors detected</div>
+        </div>
+      </div>
+      <div class="factors">
+        <div class="fc" data-f="1"><span class="ch c">CRITICAL</span><span class="ch w">+25</span><b>NAP mismatch</b><p>Name, Address, Phone must be character-identical everywhere — the most common silent rejection cause.</p></div>
+        <div class="fc" data-f="2"><span class="ch c">CRITICAL</span><span class="ch w">+20</span><b>Keyword-stuffed business name</b><p>Revert to the real-world name — padded names are a top content-violation trigger.</p></div>
+        <div class="fc" data-f="3"><span class="ch c">CRITICAL</span><span class="ch w">+20</span><b>Pending appeal(s) open</b><p>Parallel appeals reset the review queue — one appeal at a time, always.</p></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SCENE 4: appeal -->
+  <div class="scene" data-s="3">
+    <span class="cap">4 · Appeal kit</span>
+    <div class="letter">
+      <h4>Appeal — Reinstatement request for "Bella Vista Dentista"</h4>
+      <pre><span id="typed"></span><span class="cur"></span></pre>
+      <div class="btns">
+        <span id="cpbtn">Copy letter</span>
+        <span>Evidence checklist ✓</span>
+        <span>Escalation protocol ✓</span>
+      </div>
+    </div>
+    <div class="stepside">
+      <h3>The $349 letter.<br>Generated in seconds.</h3>
+      <p>Matched to Google's suspension wording, with the evidence checklist and the escalation protocol most appeals forget — plus the days-suspended line that creates real urgency.</p>
+    </div>
+  </div>
+
+  <!-- SCENE 5: pdf -->
+  <div class="scene" data-s="4">
+    <span class="cap">5 · White-label report</span>
+    <div class="pdf">
+      <div class="ph"><b>GBP Suspension Risk Report</b><small>Prepared by Your Agency · Generated 2026-09-08</small></div>
+      <div class="bd">
+        <div class="mrow">
+          <div class="m"><b style="color:#d70015">97</b><span>Risk score</span></div>
+          <div class="m"><b>4</b><span>Critical</span></div>
+          <div class="m"><b>9</b><span>Factors</span></div>
+          <div class="m"><b>125</b><span>Max</span></div>
+        </div>
+        <div class="srow"><span class="lb">Critical</span><div class="bar"><i style="width:100%;background:#ff3b30"></i></div><span>2</span></div>
+        <div class="srow"><span class="lb">High</span><div class="bar"><i style="width:66%;background:#ff9500"></i></div><span>4</span></div>
+        <div class="srow"><span class="lb">Medium</span><div class="bar"><i style="width:33%;background:#007aff"></i></div><span>3</span></div>
+        <div class="print">Print / Save as PDF</div>
+      </div>
+    </div>
+    <div class="stepside">
+      <h3>Agencies: bill for the audit.</h3>
+      <p>Every Pro report is white-label — your agency's name on a styled, printable document you can hand to a client at $150–250 per case.</p>
+    </div>
+  </div>
+
+</div>
+
+<div class="dots" id="dots"><i class="on"></i><i></i><i></i><i></i><i></i></div>
+<div class="disc">Automated walkthrough of <a href="index.html">GBP Suspension Shield</a> — every output shown is generated by the real extension engine (scoring, letter text, report layout). Interface rendered in-page for this demonstration. The extension is <a href="https://chromewebstore.google.com/">free on the Chrome Web Store</a> · <a href="privacy.html">Privacy: nothing leaves your browser</a></div>
+
+<script>
+(function () {
+  var scenes = document.querySelectorAll('.scene');
+  var dots = document.querySelectorAll('#dots i');
+  var LETTER = 'To the Google Business Profile review team,\n\nI am the owner/authorized representative of Bella Vista Dentista (Dental clinic), located in Vilnius, Lithuania.\n\nThe profile currently shows "Suspended - policy violation (quality)". We believe the suspension is in error and respectfully request reinstatement.\n\n- The business has operated for 6 years and serves customers at our physical premises, staffed during posted hours.\n- The profile has now been suspended for approximately 12 day(s), during which the business loses customers daily.\n- NAP is now identical across our website and public listings; the name has been corrected per guidelines.\n\nSupporting evidence available on request:\n1. Exterior photo showing permanent signage and the street number\n2. Business license / registration certificate\n3. Utility bill in the business name at this address\n\nWe are happy to provide video verification. Please reinstate the profile, or let us know precisely which requirement is in question.\n\nSincerely,\n[Name], Owner';
+  var cur = 0, typing = null, timer = null;
+
+  function clearScene() {
+    document.querySelectorAll('.sel').forEach(function (s) { s.classList.remove('filled'); s.textContent = '—'; });
+    document.querySelectorAll('.fc').forEach(function (f) { f.classList.remove('on'); });
+    var r = document.getElementById('ring');
+    r.style.transition = 'none'; r.setAttribute('stroke-dashoffset', '238.76'); void r.getBoundingClientRect();
+    document.getElementById('scoreN').textContent = '0';
+    document.getElementById('fcount').textContent = '0 factors detected';
+    document.getElementById('typed').textContent = '';
+    var cb = document.getElementById('cpbtn'); cb.textContent = 'Copy letter'; cb.classList.remove('ok');
+    document.getElementById('runBtn').classList.remove('pulse');
+  }
+
+  function playScene(i) {
+    if (i === 1) {
+      var sels = document.querySelectorAll('.sel'), k = 0;
+      var iv = setInterval(function () {
+        if (k >= sels.length) { clearInterval(iv); document.getElementById('runBtn').classList.add('pulse'); return; }
+        sels[k].classList.add('filled'); sels[k].textContent = sels[k].getAttribute('data-fill'); k++;
+      }, 550);
+    }
+    if (i === 2) {
+      setTimeout(function () {
+        var r = document.getElementById('ring');
+        r.style.transition = 'stroke-dashoffset 1.6s cubic-bezier(.2,.7,.2,1)';
+        r.setAttribute('stroke-dashoffset', '56.4'); /* 97/125 */
+        var n = 0, iv = setInterval(function () {
+          n += 3; if (n >= 97) { n = 97; clearInterval(iv); }
+          document.getElementById('scoreN').textContent = n;
+        }, 42);
+        document.getElementById('fcount').textContent = '9 factors detected';
+        var fcs = document.querySelectorAll('.fc');
+        setTimeout(function () { fcs[0].classList.add('on'); }, 700);
+        setTimeout(function () { fcs[1].classList.add('on'); }, 1250);
+        setTimeout(function () { fcs[2].classList.add('on'); }, 1800);
+      }, 350);
+    }
+    if (i === 3) {
+      var p = 0; clearInterval(typing);
+      typing = setInterval(function () {
+        p += 3;
+        document.getElementById('typed').textContent = LETTER.slice(0, p);
+        if (p >= LETTER.length) {
+          clearInterval(typing);
+          setTimeout(function () { var cb = document.getElementById('cpbtn'); cb.textContent = 'Copied ✓'; cb.classList.add('ok'); }, 350);
+        }
+      }, 26);
+    }
+  }
+
+  function show(i) {
+    cur = i;
+    scenes.forEach(function (s, x) { s.classList.toggle('on', x === i); });
+    dots.forEach(function (d, x) { d.classList.toggle('on', x === i); });
+    clearScene();
+    setTimeout(function () { playScene(i); }, 400);
+  }
+
+  show(0);
+  timer = setInterval(function () { show((cur + 1) % scenes.length); }, 6500);
+})();
+</script>
+</body>
+</html>
