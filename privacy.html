@@ -14,6 +14,7 @@
   h2 { font-size:16px; margin:28px 0 8px; letter-spacing:-.01em; }
   p, li { font-size:14px; line-height:1.7; color:#3a3a3c; }
   ul { padding-left:20px; }
+  code { background:#ececf1; border-radius:4px; padding:1px 5px; font-size:12.5px; }
   .back { font-size:13px; }
   .back a { color:#0071e3; text-decoration:none; }
 </style>
@@ -21,43 +22,49 @@
 <body>
 <div class="wrap">
   <h1>Privacy Policy</h1>
-  <div class="upd">Last updated: September 8, 2026 · Panic Later (independent software)</div>
+  <div class="upd">Last updated: September 2026 · Panic Later (independent software) · covers all products listed below</div>
 
   <h2>1. The short version</h2>
-  <p>We don't collect your data. Our products run entirely on your device, and nothing you do inside them is transmitted to us or to anyone else.</p>
+  <p>We don't collect your data. Our products run on your device, and nothing you do inside them is transmitted to us or to anyone else — with exactly two narrow exceptions, both described below and both about a license key, never your content.</p>
 
-  <h2>2. What our software stores, and where</h2>
+  <h2>2. Our products</h2>
   <ul>
-    <li><b>Audit answers and generated reports</b> stay in your browser's local storage (<code>chrome.storage.local</code>) on your device. They never leave it.</li>
-    <li><b>Your license key</b>, after activation, is stored the same way — locally, on your device. One exception to local-only: when you activate Pro, the key is sent over HTTPS to our payment processor's public license API (<code>api.lemonsqueezy.com</code>) to verify it, and re-checked there about once a month. Only the key itself is sent — no audit answers, reports, journal entries, or any other data, ever.</li>
-    <li><b>Case journal entries</b> you write are stored locally on your device only.</li>
+    <li><b>GBP Suspension Shield</b> — audits the information you enter about a Google Business Profile, and reads the visible text of the Maps page you have open for the live-scan feature.</li>
+    <li><b>Accessibility Shield</b> — screens the page you explicitly choose to audit (via your one click) for accessibility issues.</li>
+    <li><b>Inbox Shield</b> — looks up the public DNS records (SPF, DKIM, DMARC, MX) of the domain you type, through public DNS-over-HTTPS resolvers. This is the same public information any mail server sees.</li>
   </ul>
 
-  <h2>3. The Maps Radar feature</h2>
-  <p>Our Chrome extension includes a detection feature that reads the <b>visible text of the Google Maps page you have open in your own browser</b>, looking for suspension notices. The resulting snapshot (page address, business name, whether a suspension notice was detected) is stored locally on your device for up to 30 minutes and is used only to display information back to you. It is not sent anywhere.</p>
+  <h2>3. What stays on your device — always</h2>
+  <ul>
+    <li><b>Audit answers, page-scan results and generated reports</b> stay in your browser's local storage (<code>chrome.storage.local</code>) on your device. They never leave it.</li>
+    <li><b>Case journal entries</b> you write are stored locally on your device only.</li>
+    <li>No analytics, no tracking, no cookies, no advertising, no accounts, no remote code.</li>
+  </ul>
 
-  <h2>4. What we never do</h2>
+  <h2>4. The two narrow exceptions</h2>
+  <p><b>1) Your license key.</b> When you activate a Pro upgrade, the key is sent over HTTPS to our payment processor's public license API (<code>api.lemonsqueezy.com</code>) to verify it, and re-checked there about once a month. Only the key itself is sent — never audit answers, page content, scanned domains, journal entries, or any other data.</p>
+  <p><b>2) Public DNS lookups (Inbox Shield).</b> Checking a domain's email records means asking public DNS resolvers (<code>dns.google</code>, <code>cloudflare-dns.com</code>) about that domain — exactly what happens when any mail server delivers mail. These requests contain the domain name only, never anything about you.</p>
+
+  <h2>5. What we never do</h2>
   <ul>
     <li>We do not collect, transmit, sell, or share personal data.</li>
-    <li>We do not use analytics, tracking, cookies, or advertising.</li>
     <li>We do not require accounts. There is nothing to sign up for.</li>
-    <li>We do not include remote code. All code ships inside the extension package.</li>
   </ul>
 
-  <h2>5. Payments</h2>
+  <h2>6. Payments</h2>
   <p>Purchases are processed by our merchant of record, <b>Lemon Squeezy, LLC</b>. When you buy, Lemon Squeezy handles your payment details under <a href="https://www.lemonsqueezy.com/privacy" style="color:#0071e3">their privacy policy</a>. We never see your card details — we receive only a license key record for activation.</p>
 
-  <h2>6. Children's privacy</h2>
+  <h2>7. Children's privacy</h2>
   <p>Our products are general-audience tools and do not knowingly collect any personal information from anyone, including children.</p>
 
-  <h2>7. Changes</h2>
+  <h2>8. Changes</h2>
   <p>If this policy ever changes, the new version will be posted on this page with an updated date. Given that our entire policy is "we don't collect," we don't expect drama here.</p>
 
-  <h2>8. Contact</h2>
+  <h2>9. Contact</h2>
   <p>Questions: <a href="mailto:panic.later.support.rocking553@simplelogin.com" style="color:#0071e3">panic.later.support.rocking553@simplelogin.com</a></p>
 
   <p class="back"><a href="index.html">← Back to Panic Later</a></p>
-  <p class="upd">Independent software. Not affiliated with Google LLC. Google Business Profile, Google Maps and Chrome are trademarks of Google LLC.</p>
+  <p class="upd">Independent software. Not affiliated with Google LLC, the W3C, or the European Commission. Google Business Profile and Google Maps are trademarks of Google LLC.</p>
 </div>
 </body>
 </html>
