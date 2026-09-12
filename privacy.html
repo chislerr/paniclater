@@ -29,7 +29,7 @@
   <h2>2. What our software stores, and where</h2>
   <ul>
     <li><b>Audit answers and generated reports</b> stay in your browser's local storage (<code>chrome.storage.local</code>) on your device. They never leave it.</li>
-    <li><b>Your license key</b>, after activation, is stored the same way — locally, on your device, for offline verification.</li>
+    <li><b>Your license key</b>, after activation, is stored the same way — locally, on your device. One exception to local-only: when you activate Pro, the key is sent over HTTPS to our payment processor's public license API (<code>api.lemonsqueezy.com</code>) to verify it, and re-checked there about once a month. Only the key itself is sent — no audit answers, reports, journal entries, or any other data, ever.</li>
     <li><b>Case journal entries</b> you write are stored locally on your device only.</li>
   </ul>
 
